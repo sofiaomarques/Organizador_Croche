@@ -385,11 +385,12 @@
     max-width: 100%;
     padding: 4px 9px;
     border-radius: 999px;
-    border: 1px solid rgba(82, 45, 48, 0.1);
+    border: 1px solid var(--line);
     display: inline-flex;
     align-items: center;
     gap: 5px;
     color: var(--text);
+    background: var(--surface-soft);
     font-size: 11px;
     font-weight: 800;
     line-height: 1.2;
@@ -801,22 +802,22 @@
     <div class="summary-card">
       <span>Projetos</span>
       <strong id="stat-projects">0</strong>
-      <small>Total cadastrado</small>
+      <small>Total registrado</small>
     </div>
     <div class="summary-card">
       <span>Em andamento</span>
       <strong id="stat-active">0</strong>
-      <small>Na agulha agora</small>
+      <small>Projetos na agulha</small>
     </div>
     <div class="summary-card">
       <span>Concluídos</span>
       <strong id="stat-finished">0</strong>
-      <small>Prontos para lembrar</small>
+      <small>Peças finalizadas</small>
     </div>
     <div class="summary-card">
       <span>Linhas</span>
       <strong id="stat-yarns">0</strong>
-      <small>Cores no estoque</small>
+      <small>Disponíveis no estoque</small>
     </div>
   </section>
 
@@ -1004,7 +1005,7 @@ function statusBadge(status, extraClass = '') {
 
 function yarnPill(yarn) {
   const color = safeColor(yarn.color);
-  return `<span class="yarn-pill" style="background:${color}24;border-color:${color}44"><span class="swatch-sm" style="width:10px;height:10px;background:${color}"></span>${escapeHtml(yarn.name)}</span>`;
+  return `<span class="yarn-pill"><span class="swatch-sm" style="width:10px;height:10px;background:${color}"></span>${escapeHtml(yarn.name)}</span>`;
 }
 
 function updateStats() {
