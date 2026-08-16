@@ -299,10 +299,6 @@
         var ctx = canvas.getContext('2d');
         ctx.clearRect(0,0,W,H);
 
-        // Build zigzag spine: diagonal strokes going across the whole area
-        // Each "zig" goes diagonally like the reference image (top-left to bottom-right)
-        // but arranged in a continuous zigzag left-to-right
-
         var angle = -50 * Math.PI / 180; // diagonal angle like reference
         var strokeH = H + 30; // height of each stroke
         var strokeW = strokeH * Math.tan(Math.abs(angle)); // horizontal span

@@ -72,27 +72,22 @@
     padding: 28px 0 40px;
     position: relative;
   }
-
-  .header {
-    min-height: 168px;
-    margin-bottom: 18px;
-    padding: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.72);
-    border-radius: var(--radius-lg);
-    background:
-      linear-gradient(135deg, rgba(255, 253, 251, 0.96), rgba(255, 246, 242, 0.88)),
-      repeating-linear-gradient(135deg, rgba(184, 91, 112, 0.08) 0 1px, transparent 1px 13px);
-    box-shadow: var(--shadow);
-  }
-
+.header {
+  min-height: 168px;
+  margin-bottom: 18px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  text-align: center;
+}
   .brand-panel {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
     min-width: 0;
   }
 
@@ -138,7 +133,7 @@
     display: flex;
     gap: 8px;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
     flex-wrap: wrap;
     flex: 0 0 auto;
   }
@@ -775,18 +770,18 @@
       padding-top: 10px;
     }
     .header {
-      align-items: flex-start;
+      align-items: center;
       padding: 18px;
       flex-direction: column;
     }
-    .brand-panel { align-items: flex-start; }
+    .brand-panel { align-items: center; }
     .brand-icon {
       width: 54px;
       height: 54px;
       border-radius: 15px;
     }
     .brand-icon i { font-size: 28px; }
-    .header-actions { width: 100%; justify-content: stretch; }
+    .header-actions { width: 100%; justify-content: center; }
     .header-actions .btn-primary,
     .header-actions .btn-outline { flex: 1; }
     .storage-status { width: 100%; justify-content: center; order: 3; }
