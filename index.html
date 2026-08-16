@@ -4,12 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Armarinho Virtual</title>
-<link rel="stylesheet" href="tabler-icons.min.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --page: #f4f5f7;
+    --page: #fdeef3;
     --surface: #ffffff;
     --surface-soft: #fbf6f7;
     --surface-muted: #f1e9ec;
@@ -54,6 +53,24 @@
   button, input, select, textarea { font: inherit; }
   button, label, select { -webkit-tap-highlight-color: transparent; }
 
+  /* Local fallback symbols keep the interface usable without a remote icon font. */
+  .ti { display: inline-block; font-family: inherit; font-style: normal; line-height: 1; }
+  .ti::before { content: "•"; }
+  .ti-check::before { content: "✓"; }
+  .ti-checks::before { content: "✓✓"; }
+  .ti-edit::before { content: "✎"; }
+  .ti-folder-heart::before { content: "♡"; }
+  .ti-folder-search::before { content: "⌕"; }
+  .ti-hourglass-high::before { content: "⌛"; }
+  .ti-package::before { content: "□"; }
+  .ti-palette::before { content: "◉"; }
+  .ti-palette-off::before { content: "◌"; }
+  .ti-photo-up::before { content: "＋"; }
+  .ti-plus::before { content: "+"; }
+  .ti-search::before { content: "⌕"; }
+  .ti-trash::before { content: "⌫"; }
+  .ti-x::before { content: "×"; }
+
   .container {
     width: min(1120px, calc(100% - 32px));
     margin: 0 auto;
@@ -79,23 +96,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
     min-width: 0;
   }
 
-  .brand-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 18px;
-    display: grid;
-    place-items: center;
-    flex: 0 0 auto;
-    color: var(--accent-strong);
-    background: var(--accent-soft);
-    border: 1px solid rgba(180, 92, 120, 0.2);
-  }
-
-  .brand-icon i { font-size: 34px; }
   .eyebrow {
     margin-bottom: 2px;
     color: var(--accent-strong);
@@ -117,26 +121,6 @@
     color: var(--text-secondary);
     font-size: 15px;
   }
-
-  .header-actions {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    flex: 0 0 auto;
-  }
-
-  .storage-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--text-secondary);
-    font-size: 12px;
-    white-space: nowrap;
-  }
-  .storage-status i { color: var(--mint); font-size: 15px; }
-  .storage-status.is-fallback i { color: var(--gold); }
 
   .summary-grid {
     display: grid;
@@ -241,16 +225,7 @@
     color: var(--text-tertiary);
   }
 
-  .search-box i {
-    position: absolute;
-    left: 13px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 18px;
-    pointer-events: none;
-  }
-
-  .search-box input { width: 100%; padding-left: 40px; }
+  .search-box input { width: 100%; padding-left: 12px; }
 
   input[type=text], input[type=color], select, textarea {
     min-height: 42px;
@@ -784,16 +759,6 @@
       flex-direction: column;
     }
     .brand-panel { align-items: center; }
-    .brand-icon {
-      width: 54px;
-      height: 54px;
-      border-radius: 15px;
-    }
-    .brand-icon i { font-size: 28px; }
-    .header-actions { width: 100%; justify-content: center; }
-    .header-actions .btn-primary,
-    .header-actions .btn-outline { flex: 1; }
-    .storage-status { width: 100%; justify-content: center; order: 3; }
     .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .workspace-panel { padding: 12px; }
     .tabs { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }
@@ -809,7 +774,7 @@
 
   @media (max-width: 440px) {
     .summary-grid { grid-template-columns: 1fr; }
-    .brand-panel { gap: 12px; }
+    .brand-panel { gap: 8px; }
     .header h1 { font-size: 32px; }
     .header p { font-size: 14px; }
   }
@@ -819,36 +784,31 @@
 <div class="container">
   <header class="header">
     <div class="brand-panel">
-      <div class="brand-icon" aria-hidden="true"><i class="ti ti-needle-thread"></i></div>
       <div>
-        <p class="eyebrow">Organizador de crochê</p>
         <h1>Armarinho Virtual</h1>
-        <p>Projetos, linhas, fotos e anotações em um cantinho só.</p>
+        <p>Projetos, linhas, fotos e anotações em um lugar só <3</p>
       </div>
-    </div>
-    <div class="header-actions">
-      <span class="storage-status" id="storage-status"><i class="ti ti-cloud-check"></i> Salvando neste dispositivo</span>
     </div>
   </header>
 
   <section class="summary-grid" aria-label="Resumo do armarinho">
     <div class="summary-card">
-      <span><i class="ti ti-folder-heart"></i> Projetos</span>
+      <span>Projetos</span>
       <strong id="stat-projects">0</strong>
       <small>Total cadastrado</small>
     </div>
     <div class="summary-card">
-      <span><i class="ti ti-hourglass-high"></i> Em andamento</span>
+      <span>Em andamento</span>
       <strong id="stat-active">0</strong>
       <small>Na agulha agora</small>
     </div>
     <div class="summary-card">
-      <span><i class="ti ti-checks"></i> Concluídos</span>
+      <span>Concluídos</span>
       <strong id="stat-finished">0</strong>
       <small>Prontos para lembrar</small>
     </div>
     <div class="summary-card">
-      <span><i class="ti ti-palette"></i> Linhas</span>
+      <span>Linhas</span>
       <strong id="stat-yarns">0</strong>
       <small>Cores no estoque</small>
     </div>
@@ -863,7 +823,6 @@
   <div id="tab-projetos">
     <div class="toolbar">
       <label class="search-box" aria-label="Buscar projetos">
-        <i class="ti ti-search"></i>
         <input type="text" id="search-proj" placeholder="Buscar projetos..." oninput="renderProjects()" />
       </label>
       <select id="filter-status" onchange="renderProjects()">
@@ -880,7 +839,6 @@
   <div id="tab-linhas" style="display:none">
     <div class="toolbar">
       <label class="search-box" aria-label="Buscar linhas">
-        <i class="ti ti-search"></i>
         <input type="text" id="search-yarn" placeholder="Buscar linhas..." oninput="renderYarns()" />
       </label>
       <button class="btn-primary" onclick="openNewYarn()"><i class="ti ti-plus"></i> Nova linha</button>
@@ -963,13 +921,6 @@ function loadState() {
   return copyDefaultState();
 }
 
-function setStorageStatus(message, fallback = false) {
-  const element = document.getElementById('storage-status');
-  if (!element) return;
-  element.classList.toggle('is-fallback', fallback);
-  element.innerHTML = `<i class="ti ${fallback ? 'ti-device-floppy' : 'ti-cloud-check'}"></i> ${message}`;
-}
-
 function openStateDb() {
   return new Promise((resolve, reject) => {
     if (!('indexedDB' in window)) { reject(new Error('IndexedDB indisponível')); return; }
@@ -1005,15 +956,9 @@ function saveState() {
   const snapshot = normalizeState(state);
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
-  } catch(e) {
-    setStorageStatus('Cópia local indisponível', true);
-  }
+  } catch(e) {}
   if (!stateDb) return saveQueue;
-  saveQueue = saveQueue.then(() => writeDbState(stateDb, snapshot)).then(() => {
-    setStorageStatus('Salvo neste dispositivo');
-  }).catch(() => {
-    setStorageStatus('Salvando em modo local', true);
-  });
+  saveQueue = saveQueue.then(() => writeDbState(stateDb, snapshot)).catch(() => {});
   return saveQueue;
 }
 
@@ -1026,12 +971,10 @@ async function hydrateState() {
     } else {
       await writeDbState(stateDb, normalizeState(state));
     }
-    setStorageStatus('Salvo neste dispositivo');
     renderProjects();
     if (document.getElementById('tab-linhas').style.display !== 'none') renderYarns();
   } catch (error) {
     stateDb = null;
-    setStorageStatus('Salvando em modo local', true);
   }
 }
 

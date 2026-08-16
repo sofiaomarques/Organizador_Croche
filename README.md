@@ -41,7 +41,6 @@ Abra o arquivo `index.html` no navegador. Depois, é possível:
 - JavaScript
 - IndexedDB
 - localStorage
-- Tabler Icons
 
 ## Propósito pessoal
 
