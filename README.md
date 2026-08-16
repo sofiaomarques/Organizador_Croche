@@ -22,10 +22,7 @@ Os dados são armazenados localmente no navegador, sem depender de uma conta ou 
 
 - O armazenamento principal utiliza IndexedDB, adequado para guardar projetos, anotações e fotos.
 - O `localStorage` é mantido como cópia de segurança local e fallback.
-- A opção de exportar permite salvar todos os dados em um arquivo `.json`.
-- A opção de importar permite recuperar os dados em outro navegador ou dispositivo.
-
-Recomenda-se exportar os dados periodicamente para manter uma cópia independente do navegador.
+O armazenamento é automático enquanto o site for usado no mesmo navegador e dispositivo.
 
 ## Como usar
 
@@ -35,7 +32,7 @@ Abra o arquivo `index.html` no navegador. Depois, é possível:
 2. Criar projetos e associar as linhas necessárias.
 3. Atualizar o status conforme cada peça evolui.
 4. Adicionar fotos e anotações para registrar o processo.
-5. Exportar os dados antes de trocar de dispositivo ou navegador.
+5. Continuar usando o site; as alterações são salvas automaticamente.
 
 ## Tecnologias
 

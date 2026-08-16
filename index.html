@@ -319,11 +319,6 @@
     border-color: rgba(179, 61, 68, 0.42);
     background: var(--red-soft);
   }
-  .btn-sm {
-    min-height: 38px;
-    padding-inline: 13px;
-    font-size: 13px;
-  }
   .btn-primary:hover, .btn-outline:hover, .btn-danger:hover {
     transform: translateY(-1px);
     box-shadow: 0 12px 26px rgba(83, 47, 45, 0.13);
@@ -829,13 +824,6 @@
     </div>
     <div class="header-actions">
       <span class="storage-status" id="storage-status"><i class="ti ti-cloud-check"></i> Salvando neste dispositivo</span>
-      <label class="btn-outline btn-sm">
-        <i class="ti ti-upload"></i> Importar
-        <input type="file" accept=".json" style="display:none" onchange="importData(this.files[0])">
-      </label>
-      <button class="btn-primary btn-sm" onclick="exportData()">
-        <i class="ti ti-download"></i> Exportar
-      </button>
     </div>
   </header>
 
@@ -1033,35 +1021,6 @@ async function hydrateState() {
     stateDb = null;
     setStorageStatus('Salvando em modo local', true);
   }
-}
-
-function exportData() {
-  const json = JSON.stringify(state, null, 2);
-  const blob = new Blob([json], {type: 'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'armarinho_virtual.json';
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function importData(file) {
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const data = JSON.parse(e.target.result);
-      if (!Array.isArray(data.projects) || !Array.isArray(data.yarns)) { alert('Arquivo inválido.'); return; }
-      Object.assign(state, normalizeState(data));
-      closeModal();
-      renderProjects();
-      saveState().then(() => alert('Dados importados e salvos com sucesso!'));
-    } catch(err) {
-      alert('Erro ao importar: arquivo inválido.');
-    }
-  };
-  reader.readAsText(file);
 }
 
 const state = loadState();
