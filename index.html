@@ -9,30 +9,34 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --page: #f7f1ec;
-    --surface: #fffdfb;
-    --surface-soft: #fff5f1;
-    --surface-muted: #f3e4dc;
-    --text: #261719;
-    --text-secondary: #766265;
-    --text-tertiary: #a78c8e;
-    --line: rgba(82, 45, 48, 0.12);
-    --line-strong: rgba(82, 45, 48, 0.22);
-    --accent: #b85b70;
-    --accent-strong: #8d314c;
-    --accent-soft: #fde6eb;
-    --mint: #267a6b;
-    --mint-soft: #e3f3ee;
-    --gold: #9c681d;
-    --gold-soft: #fff1d9;
-    --blue: #416f99;
-    --blue-soft: #e7f0f8;
-    --green: #477225;
-    --green-soft: #e9f4df;
-    --red: #b33d44;
-    --red-soft: #fde8e8;
-    --shadow: 0 22px 60px rgba(83, 47, 45, 0.14);
-    --shadow-soft: 0 12px 34px rgba(83, 47, 45, 0.09);
+    --page: #f4f5f7;
+    --surface: #ffffff;
+    --surface-soft: #fbf6f7;
+    --surface-muted: #f1e9ec;
+    --text: #27313a;
+    --text-secondary: #68747e;
+    --text-tertiary: #98a2aa;
+    --line: rgba(39, 49, 58, 0.11);
+    --line-strong: rgba(39, 49, 58, 0.2);
+    --accent: #b45c78;
+    --accent-strong: #8f3f5c;
+    --accent-soft: #f7e8ed;
+    --lilac: #8d70b5;
+    --lilac-soft: #f0eafa;
+    --olive: #7f8f52;
+    --olive-soft: #eef2df;
+    --mint: #347b6e;
+    --mint-soft: #e4f2ee;
+    --gold: #a06f2a;
+    --gold-soft: #fff3dd;
+    --blue: #4d7597;
+    --blue-soft: #e8f0f6;
+    --green: #4d7a3a;
+    --green-soft: #eaf4e4;
+    --red: #b44951;
+    --red-soft: #fdebed;
+    --shadow: 0 16px 40px rgba(39, 49, 58, 0.08);
+    --shadow-soft: 0 8px 24px rgba(39, 49, 58, 0.06);
     --radius-sm: 8px;
     --radius-md: 10px;
     --radius-lg: 14px;
@@ -44,23 +48,7 @@
     font-family: var(--font);
     line-height: 1.5;
     color: var(--text);
-    background:
-      linear-gradient(135deg, rgba(184, 91, 112, 0.18) 0%, rgba(184, 91, 112, 0) 36%),
-      linear-gradient(315deg, rgba(38, 122, 107, 0.12) 0%, rgba(38, 122, 107, 0) 34%),
-      var(--page);
-  }
-
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.38;
-    background-image:
-      linear-gradient(90deg, rgba(141, 49, 76, 0.06) 1px, transparent 1px),
-      linear-gradient(0deg, rgba(38, 122, 107, 0.05) 1px, transparent 1px);
-    background-size: 44px 44px;
-    mask-image: linear-gradient(to bottom, black 0%, transparent 72%);
+    background: var(--page);
   }
 
   button, input, select, textarea { font: inherit; }
@@ -82,6 +70,10 @@
   justify-content: center;
   gap: 18px;
   text-align: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow);
 }
   .brand-panel {
     display: flex;
@@ -99,11 +91,8 @@
     place-items: center;
     flex: 0 0 auto;
     color: var(--accent-strong);
-    background:
-      radial-gradient(circle at 30% 25%, #ffffff 0 18%, transparent 19%),
-      linear-gradient(135deg, var(--accent-soft), #fff8ed);
-    border: 1px solid rgba(184, 91, 112, 0.22);
-    box-shadow: inset 0 -10px 18px rgba(184, 91, 112, 0.08);
+    background: var(--accent-soft);
+    border: 1px solid rgba(180, 92, 120, 0.2);
   }
 
   .brand-icon i { font-size: 34px; }
@@ -190,6 +179,11 @@
     color: var(--text-tertiary);
     font-size: 13px;
   }
+
+  .summary-card:nth-child(1) { border-top: 3px solid var(--accent); background: #fff8fa; }
+  .summary-card:nth-child(2) { border-top: 3px solid var(--mint); background: #f5fbf9; }
+  .summary-card:nth-child(3) { border-top: 3px solid var(--lilac); background: var(--lilac-soft); }
+  .summary-card:nth-child(4) { border-top: 3px solid var(--olive); background: var(--olive-soft); }
 
   .workspace-panel {
     padding: 18px;
@@ -351,10 +345,7 @@
     place-items: center;
     position: relative;
     overflow: hidden;
-    background:
-      linear-gradient(135deg, rgba(184, 91, 112, 0.12), rgba(38, 122, 107, 0.1)),
-      repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.54) 0 2px, transparent 2px 12px),
-      var(--surface-muted);
+    background: var(--surface-muted);
   }
 
   .project-card .img-area img,
@@ -583,6 +574,28 @@
     cursor: pointer;
   }
 
+  .color-palette {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .color-choice {
+    width: 25px;
+    height: 25px;
+    padding: 0;
+    border: 3px solid var(--surface);
+    border-radius: 50%;
+    background: var(--swatch);
+    box-shadow: 0 0 0 1px var(--line-strong);
+    cursor: pointer;
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+  }
+  .color-choice:hover, .color-choice.is-selected {
+    transform: scale(1.12);
+    box-shadow: 0 0 0 2px var(--accent-strong);
+  }
+
   .form-row {
     display: grid;
     grid-template-columns: minmax(120px, 1fr) minmax(180px, 2fr);
@@ -602,9 +615,7 @@
     justify-content: center;
     gap: 7px;
     color: var(--text-tertiary);
-    background:
-      repeating-linear-gradient(135deg, rgba(184, 91, 112, 0.08) 0 1px, transparent 1px 12px),
-      var(--surface-soft);
+    background: var(--surface-soft);
     cursor: pointer;
     transition: border-color 0.16s ease, background 0.16s ease;
   }
@@ -683,9 +694,7 @@
     place-items: center;
     overflow: hidden;
     color: var(--text-tertiary);
-    background:
-      linear-gradient(135deg, rgba(184, 91, 112, 0.12), rgba(38, 122, 107, 0.1)),
-      var(--surface-muted);
+    background: var(--surface-muted);
   }
 
   .detail-label {
@@ -891,10 +900,10 @@ const defaultState = {
     { id: 3, name: 'Cachecol de inverno', status: 'concluido', notes: 'Ponto rendado. Ficou lindo!', yarns: [2,4], img: null },
   ],
   yarns: [
-    { id: 1, name: 'Cisne 100% algodão', color: '#F4A261', weight: 'Fino (DK)', stock: '3 novelos', notes: '' },
-    { id: 2, name: 'Fio Cru natural', color: '#E9C46A', weight: 'Médio (Worsted)', stock: '5 novelos', notes: '' },
-    { id: 3, name: 'Barbante 6 verde', color: '#2A9D8F', weight: 'Grosso (Bulky)', stock: '2 rolos', notes: '' },
-    { id: 4, name: 'Linha azul petróleo', color: '#264653', weight: 'Fino (DK)', stock: '1 novelo', notes: '' },
+    { id: 1, name: 'Cisne 100% algodão', color: '#F4A261', weight: 'Fino', stock: '3 novelos', notes: '' },
+    { id: 2, name: 'Fio Cru natural', color: '#E9C46A', weight: 'Médio', stock: '5 novelos', notes: '' },
+    { id: 3, name: 'Barbante 6 verde', color: '#2A9D8F', weight: 'Grosso', stock: '2 rolos', notes: '' },
+    { id: 4, name: 'Linha azul petróleo', color: '#264653', weight: 'Fino', stock: '1 novelo', notes: '' },
   ],
   nextProjId: 4,
   nextYarnId: 5
@@ -907,6 +916,14 @@ const DB_STORE = 'app_state';
 
 function copyDefaultState() {
   return JSON.parse(JSON.stringify(defaultState));
+}
+
+function normalizeWeight(value) {
+  const weight = String(value || '').trim().toLowerCase();
+  if (weight.includes('fino') || weight === 'dk') return 'Fino';
+  if (weight.includes('médio') || weight.includes('medio') || weight.includes('worsted')) return 'Médio';
+  if (weight.includes('grosso') || weight.includes('bulky')) return 'Grosso';
+  return 'Médio';
 }
 
 function normalizeState(data) {
@@ -929,7 +946,7 @@ function normalizeState(data) {
       id: Number(y.id),
       name: String(y.name || 'Linha sem nome'),
       color: /^#[0-9a-f]{6}$/i.test(y.color || '') ? y.color : '#b85b70',
-      weight: String(y.weight || 'Não informado'),
+      weight: normalizeWeight(y.weight),
       stock: String(y.stock || ''),
       notes: String(y.notes || '')
     })).filter(y => Number.isFinite(y.id)),
@@ -1154,6 +1171,31 @@ function previewImg(e, areaId, hiddenId) {
   reader.readAsDataURL(file);
 }
 
+const yarnColors = [
+  { name: 'Rosa antigo', value: '#d86b8b' },
+  { name: 'Rosa claro', value: '#e7a5ba' },
+  { name: 'Rosa intenso', value: '#b84c72' },
+  { name: 'Lilás', value: '#b59ad8' },
+  { name: 'Roxo suave', value: '#8d70b5' },
+  { name: 'Verde oliva', value: '#7f8f52' },
+  { name: 'Oliva claro', value: '#aab77a' },
+  { name: 'Sálvia', value: '#9aa86e' }
+];
+
+function colorPalette(inputId, currentColor = '') {
+  return `<div class="color-palette" aria-label="Cores sugeridas">
+    ${yarnColors.map(color => `<button type="button" class="color-choice${color.value.toLowerCase() === String(currentColor).toLowerCase() ? ' is-selected' : ''}" style="--swatch:${color.value}" title="${color.name}" aria-label="${color.name}" onclick="setYarnColor('${inputId}','${color.value}',this)"></button>`).join('')}
+  </div>`;
+}
+
+function setYarnColor(inputId, color, button) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  input.value = color;
+  button.parentElement.querySelectorAll('.color-choice').forEach(choice => choice.classList.remove('is-selected'));
+  button.classList.add('is-selected');
+}
+
 function openNewProject() {
   document.getElementById('modal-container').innerHTML = `
     <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
@@ -1294,14 +1336,12 @@ function openNewYarn() {
         <div class="modal-body">
           <div class="field"><label>Nome da linha</label><input type="text" id="yarn-name" placeholder="Ex: Barbante 4 colorido"></div>
           <div class="form-row">
-            <div class="field"><label>Cor</label><input type="color" id="yarn-color" value="#E9C46A"></div>
+            <div class="field"><label>Cor</label><input type="color" id="yarn-color" value="#E9C46A">${colorPalette('yarn-color', '#E9C46A')}</div>
             <div class="field"><label>Espessura</label>
               <select id="yarn-weight" style="width:100%">
-                <option>Fino (DK)</option>
-                <option>Médio (Worsted)</option>
-                <option>Grosso (Bulky)</option>
-                <option>Super grosso</option>
-                <option>Linha de bordado</option>
+                <option>Fino</option>
+                <option>Médio</option>
+                <option>Grosso</option>
               </select>
             </div>
           </div>
@@ -1374,10 +1414,10 @@ function editYarn(id) {
         <div class="modal-body">
           <div class="field"><label>Nome</label><input type="text" id="edit-yarn-name" value="${escapeHtml(y.name)}"></div>
           <div class="form-row">
-            <div class="field"><label>Cor</label><input type="color" id="edit-yarn-color" value="${color}"></div>
+            <div class="field"><label>Cor</label><input type="color" id="edit-yarn-color" value="${color}">${colorPalette('edit-yarn-color', color)}</div>
             <div class="field"><label>Espessura</label>
               <select id="edit-yarn-weight" style="width:100%">
-                ${['Fino (DK)','Médio (Worsted)','Grosso (Bulky)','Super grosso','Linha de bordado'].map(w=>`<option ${y.weight===w?'selected':''}>${escapeHtml(w)}</option>`).join('')}
+                ${['Fino','Médio','Grosso'].map(w=>`<option ${normalizeWeight(y.weight)===w?'selected':''}>${escapeHtml(w)}</option>`).join('')}
               </select>
             </div>
           </div>
