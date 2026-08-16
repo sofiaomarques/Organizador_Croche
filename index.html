@@ -143,6 +143,17 @@
     flex: 0 0 auto;
   }
 
+  .storage-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .storage-status i { color: var(--mint); font-size: 15px; }
+  .storage-status.is-fallback i { color: var(--gold); }
+
   .summary-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -783,6 +794,7 @@
     .header-actions { width: 100%; justify-content: stretch; }
     .header-actions .btn-primary,
     .header-actions .btn-outline { flex: 1; }
+    .storage-status { width: 100%; justify-content: center; order: 3; }
     .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .workspace-panel { padding: 12px; }
     .tabs { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }
@@ -816,6 +828,7 @@
       </div>
     </div>
     <div class="header-actions">
+      <span class="storage-status" id="storage-status"><i class="ti ti-cloud-check"></i> Salvando neste dispositivo</span>
       <label class="btn-outline btn-sm">
         <i class="ti ti-upload"></i> Importar
         <input type="file" accept=".json" style="display:none" onchange="importData(this.files[0])">
@@ -904,18 +917,122 @@ const defaultState = {
   nextYarnId: 5
 };
 
-function loadState() {
-  try {
-    const saved = localStorage.getItem('armarinho_v1');
-    if (saved) return JSON.parse(saved);
-  } catch(e) {}
+const STORAGE_KEY = 'armarinho_v1';
+const DB_NAME = 'armarinho_virtual_db';
+const DB_VERSION = 1;
+const DB_STORE = 'app_state';
+
+function copyDefaultState() {
   return JSON.parse(JSON.stringify(defaultState));
 }
 
-function saveState() {
+function normalizeState(data) {
+  const source = data && typeof data === 'object' ? data : {};
+  const projects = Array.isArray(source.projects) ? source.projects : [];
+  const yarns = Array.isArray(source.yarns) ? source.yarns : [];
+  const projectIds = projects.map(p => Number(p.id)).filter(Number.isFinite);
+  const yarnIds = yarns.map(y => Number(y.id)).filter(Number.isFinite);
+  const validStatuses = ['planejado', 'em-andamento', 'concluido'];
+  return {
+    projects: projects.map(p => ({
+      id: Number(p.id),
+      name: String(p.name || 'Projeto sem nome'),
+      status: validStatuses.includes(p.status) ? p.status : 'planejado',
+      notes: String(p.notes || ''),
+      yarns: Array.isArray(p.yarns) ? p.yarns.map(Number).filter(Number.isFinite) : [],
+      img: typeof p.img === 'string' && p.img ? p.img : null
+    })).filter(p => Number.isFinite(p.id)),
+    yarns: yarns.map(y => ({
+      id: Number(y.id),
+      name: String(y.name || 'Linha sem nome'),
+      color: /^#[0-9a-f]{6}$/i.test(y.color || '') ? y.color : '#b85b70',
+      weight: String(y.weight || 'Não informado'),
+      stock: String(y.stock || ''),
+      notes: String(y.notes || '')
+    })).filter(y => Number.isFinite(y.id)),
+    nextProjId: Math.max(Number(source.nextProjId) || 0, 0, ...projectIds) + (Number(source.nextProjId) > Math.max(0, ...projectIds) ? 0 : 1),
+    nextYarnId: Math.max(Number(source.nextYarnId) || 0, 0, ...yarnIds) + (Number(source.nextYarnId) > Math.max(0, ...yarnIds) ? 0 : 1)
+  };
+}
+
+function loadState() {
   try {
-    localStorage.setItem('armarinho_v1', JSON.stringify(state));
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) return normalizeState(JSON.parse(saved));
   } catch(e) {}
+  return copyDefaultState();
+}
+
+function setStorageStatus(message, fallback = false) {
+  const element = document.getElementById('storage-status');
+  if (!element) return;
+  element.classList.toggle('is-fallback', fallback);
+  element.innerHTML = `<i class="ti ${fallback ? 'ti-device-floppy' : 'ti-cloud-check'}"></i> ${message}`;
+}
+
+function openStateDb() {
+  return new Promise((resolve, reject) => {
+    if (!('indexedDB' in window)) { reject(new Error('IndexedDB indisponível')); return; }
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    request.onupgradeneeded = () => {
+      if (!request.result.objectStoreNames.contains(DB_STORE)) request.result.createObjectStore(DB_STORE, { keyPath: 'id' });
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error || new Error('Não foi possível abrir o armazenamento'));
+  });
+}
+
+function readDbState(db) {
+  return new Promise((resolve, reject) => {
+    const request = db.transaction(DB_STORE, 'readonly').objectStore(DB_STORE).get('current');
+    request.onsuccess = () => resolve(request.result ? request.result.state : null);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+function writeDbState(db, snapshot) {
+  return new Promise((resolve, reject) => {
+    const request = db.transaction(DB_STORE, 'readwrite').objectStore(DB_STORE).put({ id: 'current', state: snapshot, savedAt: Date.now() });
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+  });
+}
+
+let stateDb = null;
+let saveQueue = Promise.resolve();
+
+function saveState() {
+  const snapshot = normalizeState(state);
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+  } catch(e) {
+    setStorageStatus('Cópia local indisponível', true);
+  }
+  if (!stateDb) return saveQueue;
+  saveQueue = saveQueue.then(() => writeDbState(stateDb, snapshot)).then(() => {
+    setStorageStatus('Salvo neste dispositivo');
+  }).catch(() => {
+    setStorageStatus('Salvando em modo local', true);
+  });
+  return saveQueue;
+}
+
+async function hydrateState() {
+  try {
+    stateDb = await openStateDb();
+    const stored = await readDbState(stateDb);
+    if (stored && Array.isArray(stored.projects) && Array.isArray(stored.yarns)) {
+      Object.assign(state, normalizeState(stored));
+    } else {
+      await writeDbState(stateDb, normalizeState(state));
+    }
+    setStorageStatus('Salvo neste dispositivo');
+    renderProjects();
+    if (document.getElementById('tab-linhas').style.display !== 'none') renderYarns();
+  } catch (error) {
+    stateDb = null;
+    setStorageStatus('Salvando em modo local', true);
+  }
 }
 
 function exportData() {
@@ -935,14 +1052,11 @@ function importData(file) {
   reader.onload = function(e) {
     try {
       const data = JSON.parse(e.target.result);
-      if (!data.projects || !data.yarns) { alert('Arquivo inválido.'); return; }
-      state.projects = data.projects;
-      state.yarns = data.yarns;
-      state.nextProjId = data.nextProjId || (Math.max(0, ...data.projects.map(p=>p.id)) + 1);
-      state.nextYarnId = data.nextYarnId || (Math.max(0, ...data.yarns.map(y=>y.id)) + 1);
+      if (!Array.isArray(data.projects) || !Array.isArray(data.yarns)) { alert('Arquivo inválido.'); return; }
+      Object.assign(state, normalizeState(data));
       closeModal();
       renderProjects();
-      alert('Dados importados com sucesso!');
+      saveState().then(() => alert('Dados importados e salvos com sucesso!'));
     } catch(err) {
       alert('Erro ao importar: arquivo inválido.');
     }
@@ -1343,6 +1457,7 @@ function deleteYarn(id) {
 }
 
 renderProjects();
+hydrateState();
 </script>
 </body>
 </html>
