@@ -133,8 +133,9 @@
     min-height: 108px;
     padding: 16px;
     border-radius: var(--radius-lg);
-    border: 1px solid rgba(255, 255, 255, 0.72);
-    background: rgba(255, 253, 251, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.82);
+    border-top: 3px solid var(--accent);
+    background: #fff8fa;
     box-shadow: var(--shadow-soft);
   }
 
@@ -163,11 +164,6 @@
     color: var(--text-tertiary);
     font-size: 13px;
   }
-
-  .summary-card:nth-child(1) { border-top: 3px solid var(--accent); background: #fff8fa; }
-  .summary-card:nth-child(2) { border-top: 3px solid var(--mint); background: #f5fbf9; }
-  .summary-card:nth-child(3) { border-top: 3px solid var(--lilac); background: var(--lilac-soft); }
-  .summary-card:nth-child(4) { border-top: 3px solid var(--olive); background: var(--olive-soft); }
 
   .workspace-panel {
     padding: 18px;
@@ -981,7 +977,6 @@ async function hydrateState() {
 const state = loadState();
 
 const statusLabel = { 'planejado': 'Planejado', 'em-andamento': 'Em andamento', 'concluido': 'Concluído' };
-const statusIcon = { 'planejado': 'ti-calendar-time', 'em-andamento': 'ti-hourglass-high', 'concluido': 'ti-check' };
 const escapeMap = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
 
 function escapeHtml(value = '') {
@@ -994,7 +989,7 @@ function safeColor(value) {
 
 function statusBadge(status, extraClass = '') {
   const safeStatus = statusLabel[status] ? status : 'planejado';
-  return `<span class="status-badge ${extraClass} status-${safeStatus}"><i class="ti ${statusIcon[safeStatus]}"></i>${statusLabel[safeStatus]}</span>`;
+  return `<span class="status-badge ${extraClass} status-${safeStatus}">${statusLabel[safeStatus]}</span>`;
 }
 
 function yarnPill(yarn) {
