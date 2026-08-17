@@ -15,6 +15,7 @@ Além de registrar o que já foi feito, o organizador ajuda principalmente no pl
 - Linhas cadastradas por cor, espessura, estoque e observações.
 - Relação entre as linhas disponíveis e os projetos que utilizam cada uma.
 - Histórico visual da evolução dos trabalhos realizados.
+- Próximos projetos para realizar a compra de materiais de maneira mais direcionada.
 
 ## Armazenamento dos dados
 
